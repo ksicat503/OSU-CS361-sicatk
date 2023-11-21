@@ -14,7 +14,8 @@ with open('track_expenses.json', 'r') as infile:
 
 contents = json.loads(expenses)
 
-print(contents)```
+print(contents)
+'''
 
 You will get the data in this format
   {'White': 1.0, 'Black':1.0}
