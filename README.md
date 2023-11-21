@@ -21,4 +21,4 @@ print(contents)
 You will get the data in this format
   {'White': 1.0, 'Black':1.0}
 
-![Alt text](image link)
+![Alt text](https://github.com/ksicat503/OSU-CS361-sicatk/blob/main/readme%20uml.jpeg)
