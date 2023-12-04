@@ -1,44 +1,51 @@
-
-#WILL CREATE TWO DIFFERENT TYPES OF ADDS THAT STORE MULTIPLE TYPES OF DATA
-
+#QUICKADD Feature
+#File is always reading home_input.txt. If the text is in the valid form of Expense, Amount, Month, Day, then the file will move that information to 
+#track_expenses.json
 import json
 
+
 while True:
-    qa_input = None
-    category = None
-    amount = None
-    current_exp = None
+    possible_pages = ("GRAPHS", "EXPENSES", "EDIT", "BREAKDOWN", "HELP AND PATCH NOTES", "ABOUT US")
+
     with open('home_input.txt', 'r') as infile:
+        #Makes sure the text file reads a valid quickadd input
+        expense_input = infile.read()
+        if expense_input and expense_input not in possible_pages:
 
-        if infile.read().strip() == "QuickAdd":
-            qa_input = input("Please enter the expense you would like to add in this format: Category, Amount. ")
-            #Allows for input to be iterated through later
-            qa_input = qa_input.split(', ')
-            category = qa_input[0]
-            amount = float(qa_input[1])
-    
-    new_exp = {category: amount}
-    with open('track_expenses.json', 'r') as infile:
-            current_exp = infile.read()
+            expense_input = expense_input.split(', ')
 
-    current_exp = json.loads(current_exp)
-    if current_exp == {}:
-         with open('track_expenses.json', 'w') as outfile:
-            json.dump(new_exp, outfile)
+            category = expense_input[0]
+            amount = expense_input[1]
+            month = expense_input[2]
+            day = expense_input[3]
 
-    else:
-        if category in current_exp:
-            current_exp[category] += amount
-        else:
-            current_exp[category] = amount 
+            with open('track_expenses.json', 'r') as json_infile:
+                expense_data = json.load(json_infile)
 
-    with open('track_expenses.txt', 'w') as outfile:
-        json.dump(current_exp, outfile)
-
-    print("Successfully added")
+            new_expense = {"Category": category, 
+                "Amount": amount,
+                "Day": day}
             
-                  
-    
-              
-        
+            #Enter if user only gave a category and amount
+            if month == "None" and day == "None":
+                if "None" in expense_data:
+                    expense_data["None"].append(new_expense)
+                else: 
+                    expense_data["None"] = [new_expense]
+            
+            elif month != "None":
+                if month in expense_data:
+                    expense_data[month].append(new_expense)
+                else:  
+                    expense_data[month] = [new_expense]
 
+            #Update json file with old and new expense
+            with open('track_expenses.json', 'w') as json_outfile:
+                json.dump(expense_data, json_outfile, indent=2)
+
+            print("Successfully added!")
+            #Overwrite home_input.txt so we dont add the same thing over and over again to track_expenses.json
+            with open('home_input.txt', 'w') as txt_outfile:
+                pass
+
+            
